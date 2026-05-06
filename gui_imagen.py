@@ -12,10 +12,11 @@ from config import *
 class Panel_Imagen(ctk.CTkFrame):
     """Panel izquierdo: imagen, descripción, controles."""
 
-    def __init__(self, master, callback_procesar, callback_cargar, **kwargs):
+    def __init__(self, master, callback_procesar, callback_cargar, callback_rapido, **kwargs):
         super().__init__(master, fg_color=COLOR_PANEL, corner_radius=0, **kwargs)
         self.callback_procesar = callback_procesar
         self.callback_cargar = callback_cargar
+        self.callback_rapido = callback_rapido
         self.img_tk = None
         self.img_original_tk = None
         self._crear_widgets()
@@ -60,6 +61,16 @@ class Panel_Imagen(ctk.CTkFrame):
         )
         self.btn_cargar.pack(side="left", fill="x", expand=True, padx=(0, 5))
 
+        self.btn_rapido = ctk.CTkButton(
+            btn_frame, text="⚡ RÁPIDO",
+            font=FUENTE_BOTON,
+            fg_color="#3a2f0f", hover_color="#4a3f1f",
+            border_width=2, border_color="#d4af37",
+            text_color="#d4af37", corner_radius=4,
+            height=50, command=self.callback_rapido,
+        )
+        self.btn_rapido.pack(side="left", fill="x", expand=True, padx=5)
+
         self.btn_procesar = ctk.CTkButton(
             btn_frame, text="▶ PROCESAR",
             font=FUENTE_BOTON,
@@ -99,10 +110,13 @@ class Panel_Imagen(ctk.CTkFrame):
         estado = "disabled" if bloqueado else "normal"
         self.btn_cargar.configure(state=estado)
         self.btn_procesar.configure(state=estado)
+        self.btn_rapido.configure(state=estado)
         if bloqueado:
-            self.btn_procesar.configure(text="⏳ Procesando...")
+            self.btn_procesar.configure(text="⏳ Proc...")
+            self.btn_rapido.configure(text="⏳...")
         else:
             self.btn_procesar.configure(text="▶ PROCESAR")
+            self.btn_rapido.configure(text="⚡ RÁPIDO")
 
     def _cargar_imagen(self):
         """Abre diálogo para cargar imagen."""

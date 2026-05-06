@@ -1,13 +1,14 @@
 # Historial Técnico
 
 ## Estado
-- App v10 (Release Final)
-- Modelo restaurado a Gemma 4.
+- App v12 (Release Final)
+- Botón rápido agregado.
 
 ## Completado
-- [x] Restaurado el modelo `gemma-4-26b-a4b-it` en `procesador.py` por solicitud tuya, ya que me confirmas que lograste hacerlo funcionar previamente. 
-- [x] Restaurados los nombres en la UI (`ejercicios.py`) para mostrar "Gemma 4" nuevamente.
-- [x] Mantenida la configuración `thinking_level="MINIMAL"`, que evita el Error 500 y acelera la respuesta.
+- [x] Añadir botón "RÁPIDO" en `gui_imagen.py`.
+- [x] Crear lógica `_ejecutar_rapido` en `main.py` para saltar animación.
+- [x] Calcular e imprimir tiempo de ejecución en segundos.
+- [x] Cambiar Top-5 por Top-3 en predicciones CNN y ViT.
 
 ## Pendiente
 - [ ] Exposición final.

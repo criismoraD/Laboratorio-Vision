@@ -151,6 +151,7 @@ class App_Vision(ctk.CTk):
             contenido,
             callback_procesar=self._iniciar_ejecucion,
             callback_cargar=self._cargar_imagen_externa,
+            callback_rapido=self._iniciar_ejecucion_rapida,
         )
         self.panel_imagen.pack(side="left", fill="both", expand=False)
         self.panel_imagen.configure(width=480)
@@ -239,6 +240,35 @@ class App_Vision(ctk.CTk):
     # ─────────────────────────────────────────
     # EJECUCIÓN
     # ─────────────────────────────────────────
+    def _iniciar_ejecucion_rapida(self):
+        if self.ejecutando or self.img_pil_actual is None:
+            if self.img_pil_actual is None:
+                self.panel_imagen.Actualizar_Estado("> [ERROR] Cargar imagen primero", COLOR_ERROR)
+            return
+
+        self.ejecutando = True
+        self.panel_imagen.Bloquear_Botones(True)
+        self.panel_codigo.Limpiar_Terminal()
+        self.panel_codigo.Log_Terminal("[INFO] Ejecución RÁPIDA iniciada...")
+
+        self.hilo_ejecucion = threading.Thread(target=self._ejecutar_rapido, daemon=True)
+        self.hilo_ejecucion.start()
+
+    def _ejecutar_rapido(self):
+        inicio = time.time()
+        self.after(0, self.panel_imagen.Actualizar_Estado, "> procesando rápido...", "#d4af37")
+        
+        resultado_img, resultado_texto = self._ejecutar_procesamiento()
+        
+        fin = time.time()
+        tiempo = fin - inicio
+        
+        # Insertamos el tiempo al inicio o al final
+        resultado_texto.append(f"  [TIEMPO] {tiempo:.2f}s")
+        
+        self.after(0, self._mostrar_resultado, resultado_img, resultado_texto)
+        self.after(0, self._finalizar_ejecucion)
+
     def _iniciar_ejecucion(self):
         if self.ejecutando or self.img_pil_actual is None:
             if self.img_pil_actual is None:

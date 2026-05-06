@@ -98,7 +98,7 @@ def Procesar_Yolo(img_cv):
 
 
 def Procesar_Cnn(img_pil):
-    """Clasificación CNN ResNet18. Retorna top-5 predicciones."""
+    """Clasificación CNN ResNet18. Retorna top-3 predicciones."""
     resultados = []
     if TORCH_DISPONIBLE:
         try:
@@ -117,23 +117,23 @@ def Procesar_Cnn(img_pil):
             with torch.no_grad():
                 salida = modelo(tensor)
                 probs = torch.nn.functional.softmax(salida[0], dim=0)
-            top5_prob, top5_idx = torch.topk(probs, 5)
+            top3_prob, top3_idx = torch.topk(probs, 3)
             # Cargar nombres de clases
             try:
                 from torchvision.models import ResNet18_Weights
                 cats = ResNet18_Weights.DEFAULT.meta.get("categories", None)
                 if cats:
-                    for i in range(5):
-                        nombre = cats[top5_idx[i]]
-                        prob = top5_prob[i].item()
+                    for i in range(3):
+                        nombre = cats[top3_idx[i]]
+                        prob = top3_prob[i].item()
                         resultados.append((nombre, prob))
                     return resultados
             except Exception:
                 pass
             clases = Cargar_Clases_Imagenet()
-            for i in range(5):
-                idx = top5_idx[i].item()
-                prob = top5_prob[i].item()
+            for i in range(3):
+                idx = top3_idx[i].item()
+                prob = top3_prob[i].item()
                 nombre = clases.get(idx, f"clase_{idx}")
                 resultados.append((nombre, prob))
             return resultados
@@ -144,8 +144,6 @@ def Procesar_Cnn(img_pil):
             ("golden_retriever", 0.87),
             ("Labrador", 0.06),
             ("tennis_ball", 0.03),
-            ("grass", 0.02),
-            ("park_bench", 0.01),
         ]
 
 
@@ -164,7 +162,7 @@ def Procesar_Rostros(img_cv):
 
 
 def Procesar_Vit(img_pil):
-    """Clasificación ViT. Retorna top-5 predicciones."""
+    """Clasificación ViT. Retorna top-3 predicciones."""
     if TORCH_DISPONIBLE:
         try:
             modelo = models_tv.vit_b_16(weights='DEFAULT')
@@ -182,24 +180,24 @@ def Procesar_Vit(img_pil):
             with torch.no_grad():
                 salida = modelo(tensor)
                 probs = torch.nn.functional.softmax(salida[0], dim=0)
-            top5_prob, top5_idx = torch.topk(probs, 5)
+            top3_prob, top3_idx = torch.topk(probs, 3)
             try:
                 from torchvision.models import ViT_B_16_Weights
                 cats = ViT_B_16_Weights.DEFAULT.meta.get("categories", None)
                 if cats:
                     resultados = []
-                    for i in range(5):
-                        nombre = cats[top5_idx[i]]
-                        prob = top5_prob[i].item()
+                    for i in range(3):
+                        nombre = cats[top3_idx[i]]
+                        prob = top3_prob[i].item()
                         resultados.append((nombre, prob))
                     return resultados
             except Exception:
                 pass
             clases = Cargar_Clases_Imagenet()
             resultados = []
-            for i in range(5):
-                idx = top5_idx[i].item()
-                prob = top5_prob[i].item()
+            for i in range(3):
+                idx = top3_idx[i].item()
+                prob = top3_prob[i].item()
                 nombre = clases.get(idx, f"clase_{idx}")
                 resultados.append((nombre, prob))
             return resultados
@@ -210,8 +208,6 @@ def Procesar_Vit(img_pil):
             ("valley", 0.72),
             ("alp", 0.15),
             ("lakeside", 0.08),
-            ("cliff", 0.03),
-            ("volcano", 0.02),
         ]
 
 
@@ -349,7 +345,7 @@ def Generar_Overlay_Clasificacion(img_pil, resultados):
             font = font_title
     draw.text((20, y_start + 8), "> CLASIFICACIÓN:", fill=(57, 255, 20), font=font_title)
     y = y_start + 40
-    for nombre, prob in resultados[:5]:
+    for nombre, prob in resultados[:3]:
         bar_w = int((w - 80) * prob)
         # Barra fondo
         draw.rectangle([(20, y), (w - 20, y + 32)], fill=(20, 30, 20, 150))
