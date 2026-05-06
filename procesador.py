@@ -361,7 +361,7 @@ def Generar_Overlay_Clasificacion(img_pil, resultados):
     return img
 
 
-def Procesar_Gemma(img_pil, prompt="Describe la imagen brevemente, Responde en español."):
+def Procesar_Gemma(img_pil, prompt="Describe la imagen en 20 palabras como máximo., Responde en español."):
     """Análisis multimodal con Gemma 4 vía Gemini API."""
     try:
         from google import genai
@@ -393,6 +393,9 @@ def Procesar_Gemma(img_pil, prompt="Describe la imagen brevemente, Responde en e
 
         config = types.GenerateContentConfig(
             max_output_tokens=500,
+            thinking_config=types.ThinkingConfig(
+                thinking_level="MINIMAL",
+            ),
         )
 
         response = client.models.generate_content(
