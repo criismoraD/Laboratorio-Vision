@@ -1,0 +1,24 @@
+# ═══════════════════════════════════════════
+# Requirements - Visión Computacional SENATI
+# pip install -r requirements.txt
+# ═══════════════════════════════════════════
+
+# GUI
+customtkinter>=5.2.0
+
+# Visión por computador
+opencv-python>=4.8.0
+Pillow>=10.0.0
+
+# Deep Learning
+torch>=2.0.0
+torchvision>=0.15.0
+
+# Detección YOLO
+ultralytics>=8.0.0
+
+# TTS (opcional — fallback usa SAPI de Windows)
+# pyttsx3>=2.90
+
+# Utilitarios
+numpy>=1.24.0
